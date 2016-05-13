@@ -5,6 +5,7 @@
     "ci": "npm run lint && npm test",
     "lint": "eslint --plugin import jsx-ally react *.js src/ test/",
     "test": "mocha --compilers js:babel-register --recursive",
+    "test:coverage": "istanbul cover node_modules/.bin/mocha -- --compilers js:babel/register",
     "postinstall": "cd node_modules/BitFlux && npm i && grunt build:module"
   },
   "devDependencies": {
