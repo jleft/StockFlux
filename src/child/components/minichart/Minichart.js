@@ -16,7 +16,7 @@ class Minichart extends Component {
         // There needs to be 2 data points to draw the minichart
         // if there's not enough, show an error.
         if (data.length < 2) {
-            this.showMinichart = false;
+            this.showMinichart = false; // TODO: remove? This is redundant
             return;
         }
 
@@ -73,10 +73,11 @@ class Minichart extends Component {
     }
 
     render() {
-        const { stockCode, chartData } = this.props;
+        const { stockCode } = this.props;
+        const showChart = this.showMinichart;
         return (
             <div className="minichartWrapper">
-                <svg className="minichart" id={`${stockCode}chart`}>
+                <svg className={`minichart${showChart ? '' : ' hidden'}`} id={`${stockCode}chart`}>
                     <defs>
                         <linearGradient id={`${stockCode}-minichart-gradient`} x1="0" x2="0" y1="0" y2="1">
                             <stop offset="0%" className="minichart-gradient top" />
@@ -84,10 +85,9 @@ class Minichart extends Component {
                         </linearGradient>
                     </defs>
                 </svg>
-                {!chartData && <div className="minichart minichart-error">
+                <div className={`minichart minichart-error${!showChart ? '' : ' hidden'}`}>
                     Not enough data to show minichart
                 </div>
-            }
             </div>
         );
     }
