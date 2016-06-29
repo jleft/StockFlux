@@ -3,15 +3,17 @@ import { Provider } from 'react-redux';
 import { render } from 'react-dom';
 import App from './containers/App';
 import 'babel-polyfill';
-import configureStore from './store/configureStore';
 
 import './assets/styles/style.less';
 
-const store = configureStore();
+fin.desktop.main(() => {
+    const store = window.opener.store;
+    const windowName = window.fin.desktop.Window.getCurrent().name;
 
-render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
-    document.getElementById('app')
-);
+    render(
+        <Provider store={store}>
+            <App />
+        </Provider>,
+        document.getElementById('app')
+    );
+});

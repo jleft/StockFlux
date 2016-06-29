@@ -6,12 +6,27 @@ import favourites from './favourites';
 import search from './search';
 import windowState from './windowState';
 
-const rootReducer = combineReducers({
+// TODO: change state shape
+
+const windowReducer = combineReducers({
     selection,
     sidebar,
     favourites,
     search,
     windowState
+});
+
+const windows = (state = [], action) => {
+    switch (action.type) {
+    case 'ADD_WINDOW':
+        return [...state, windowReducer(undefined, action)];
+    default:
+        return state.map(childWindowState => windowReducer(childWindowState, action));
+    }
+};
+
+const rootReducer = combineReducers({
+    windows
 });
 
 // Wrap the reducer in dev to freeze the state and action
