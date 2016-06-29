@@ -84,3 +84,67 @@ export function resizeToDefault() {
         );
     };
 }
+
+function openWindowRequest(config) {
+    return {
+        type: 'OPEN_WINDOW_RESQUEST',
+        config
+    };
+}
+
+function openWindowSuccess() {
+    return {
+        // type: ACTION_TYPES.OPEN_WINDOW_SUCCESS
+        type: 'OPEN_WINDOW_SUCCESS'
+    };
+}
+
+function openWindowFailure(error) {
+    return {
+        type: ACTION_TYPES.OPEN_WINDOW_FAILURE,
+        error
+    };
+}
+
+function showWindowRequest() {
+    return {
+        // type: ACTION_TYPES.SHOW_WINDOW_REQUEST
+        type: 'SHOW_WINDOW_REQUEST'
+    };
+}
+
+function showWindowSuccess() {
+    return {
+        // type: ACTION_TYPES.SHOW_WINDOW_SUCCESS
+        type: 'SHOW_WINDOW_SUCCESS'
+    };
+}
+
+function showWindowFailure(error) {
+    return {
+        type: ACTION_TYPES.SHOW_WINDOW_FAILURE,
+        error
+    };
+}
+
+function showWindow(windowToShow) {
+    return dispatch => {
+        dispatch(openWindowSuccess());
+        dispatch(showWindowRequest());
+        windowToShow.show(
+            () => dispatch(showWindowSuccess()),
+            () => dispatch(showWindowFailure())
+        );
+    };
+}
+
+export function openWindow(config) {
+    return dispatch => {
+        dispatch(openWindowRequest(config));
+        const newWindow = new fin.desktop.Window( // eslint-disable-line
+            config,
+            () => dispatch(showWindow(newWindow)),
+            () => dispatch(openWindowFailure())
+        );
+    };
+}

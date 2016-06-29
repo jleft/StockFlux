@@ -1,5 +1,6 @@
 import configService from '../shared/ConfigService';
 import configureStore from '../child/store/configureStore';
+import { openWindow } from '../child/actions/window';
 import 'babel-polyfill';
 
 //
@@ -32,37 +33,47 @@ import 'babel-polyfill';
 
 const store = configureStore();
 
-store.dispatch({ type: 'ADD_WINDOW', config: {} });
-
-function successCb() {
-    this.show();
-}
-
-function errCb(err) {
-    console.error(err);
-}
-
-function createMainWindow(id) {
-    window.store = store;
-
+fin.desktop.main(() => {
     const config = configService.getWindowConfig();
+    store.dispatch(openWindow(config));
+});
+// function showSuccess() {
+//     console.log('SHOW', arguments);
+// }
+//
+// function showErr() {
+//     console.error('SHOW ERROR', arguments);
+// }
+//
+// function creationSuccessCb() {
+//     this.show(showSuccess, showErr);
+// }
+//
+// function creationErrCb(err) {
+//     console.error(err);
+// }
+//
+// function createMainWindow(id) {
+//     window.store = store;
+//
+//     const config = configService.getWindowConfig();
+//
+//     const mainWindow = new fin.desktop.Window(
+//         config,
+//         creationSuccessCb,
+//         creationErrCb
+//     );
+//
+//     mainWindow.customId = id;
+//
+//     const closedEvent = () => {
+//         // Close the application
+//         // only close when all windows are closed
+//         window.close();
+//     };
+//
+//     mainWindow.addEventListener('closed', closedEvent);
+// }
 
-    const mainWindow = new fin.desktop.Window(
-        config,
-        successCb,
-        errCb
-    );
-
-    mainWindow.customId = id;
-
-    const closedEvent = () => {
-        // Close the application
-        // only close when all windows are closed
-        window.close();
-    };
-
-    mainWindow.addEventListener('closed', closedEvent);
-}
-
-fin.desktop.main(() => createMainWindow(1));
-fin.desktop.main(() => createMainWindow(2));
+// fin.desktop.main(() => createMainWindow(1));
+// fin.desktop.main(() => createMainWindow(2));

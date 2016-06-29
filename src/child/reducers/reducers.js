@@ -18,7 +18,7 @@ const windowReducer = combineReducers({
 
 const windows = (state = [], action) => {
     switch (action.type) {
-    case 'ADD_WINDOW':
+    case 'OPEN_WINDOW_RESQUEST':
         return [...state, windowReducer(undefined, action)];
     default:
         return state.map(childWindowState => windowReducer(childWindowState, action));

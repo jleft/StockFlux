@@ -1,6 +1,10 @@
 import { WINDOW as ACTION_TYPES } from '../constants/actionTypes';
 
 export default function windowState(state = {
+    isOpening: false,
+    isOpen: false,
+    isShowing: false,
+    isShown: false,
     isCompact: false,
     isMaximised: false,
     isResizing: false
@@ -28,6 +32,34 @@ export default function windowState(state = {
         return Object.assign({}, state, {
             isResizing: false,
             hasErrors: true
+        });
+    case ACTION_TYPES.OPEN_WINDOW_RESQUEST:
+        return Object.assign({}, state, {
+            isOpening: true
+        });
+    case ACTION_TYPES.OPEN_WINDOW_SUCCESS:
+        return Object.assign({}, state, {
+            isOpening: false,
+            isOpen: true
+        });
+    case ACTION_TYPES.OPEN_WINDOW_FAILURE:
+        return Object.assign({}, state, {
+            isOpening: false,
+            isOpen: false
+        });
+    case ACTION_TYPES.SHOW_WINDOW_RESQUEST:
+        return Object.assign({}, state, {
+            isShowing: true
+        });
+    case ACTION_TYPES.SHOW_WINDOW_SUCCESS:
+        return Object.assign({}, state, {
+            isShowing: false,
+            isShown: true
+        });
+    case ACTION_TYPES.SHOW_WINDOW_FAILURE:
+        return Object.assign({}, state, {
+            isShowing: false,
+            isShown: false
         });
     case ACTION_TYPES.CLOSE:
     default:
