@@ -6,7 +6,7 @@ import Showcase from './showcase/Showcase';
 import Version from '../components/version/Version';
 import { truncate } from '../services/formatters';
 
-import DevTools from './devTools/DevTools.js';
+import DevTools from '../../shared/containers/devTools/DevTools.js';
 import noFavourites from '../assets/png/no_favourites.png';
 
 const App = ({ code, name, windowState }) => (
@@ -34,7 +34,7 @@ App.propTypes = {
 };
 
 function mapStateToProps(state) {
-    const { selection, windowState } = state;
+    const { selection, windowState } = state[fin.desktop.Window.getCurrent().contentWindow.name];
     const { name, code } = selection;
     return { name, code, windowState };
 }
