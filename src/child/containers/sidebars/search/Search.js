@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { searchInput, search, selectFavourites } from '../../../actions/sidebar';
 import searchTabImage from '../../../assets/png/search_tab.png';
 import SearchResult from '../../../components/SearchResult.js';
-import { searchSelector as mapStateToProps } from '../../../selectors/index';
+import { searchSelector as mapStateToProps } from '../../../selectors/selectors';
 const SEARCH_TIMEOUT_INTERVAL = 250;
 
 class Search extends Component {

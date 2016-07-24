@@ -1,10 +1,13 @@
 import { createSelector } from 'reselect';
 import currentWindowService from '../services/currentWindowService';
 
-const windowStateSelector = (state) => state[currentWindowService.getCurrentWindow().contentWindow.name];
+const getCurrentWindowState = (state) => state[currentWindowService.getCurrentWindow().name];
+const createWindowStateSelector = (...args) => createSelector(getCurrentWindowState, ...args);
 
-export const appSelector = createSelector(
-    windowStateSelector,
+// TODO: create factory functions to return new instance of each selector?
+// For better performance across instances
+// export const appSelector = () => createWindowStateSelector(
+export const appSelector = createWindowStateSelector(
     (state) => {
         const { selection, windowState } = state;
         const { name, code } = selection;
@@ -12,16 +15,14 @@ export const appSelector = createSelector(
     }
 );
 
-export const favouritesSelector = createSelector(
-    windowStateSelector,
+export const favouritesSelector = createWindowStateSelector(
     (state) => {
         const { favourites, selection, windowState } = state;
         return { favourites, selection, windowState, isStarting: false, hasErrors: false };
     }
 );
 
-export const searchSelector = createSelector(
-    windowStateSelector,
+export const searchSelector = createWindowStateSelector(
     (state) => {
         const { favourites, selection } = state;
         const { isSearching, hasErrors, results, term } = state.search;
@@ -29,16 +30,14 @@ export const searchSelector = createSelector(
     }
 );
 
-export const sidebarSelector = createSelector(
-    windowStateSelector,
+export const sidebarSelector = createWindowStateSelector(
     (state) => {
         const { sidebar, selection, favourites, windowState } = state;
         return { sidebar, selection, favourites, windowState };
     }
 );
 
-export const toolbarSelector = createSelector(
-    windowStateSelector,
+export const toolbarSelector = createWindowStateSelector(
     (state) => {
         const { windowState } = state;
         return { windowState };
