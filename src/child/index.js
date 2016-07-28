@@ -4,7 +4,7 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import App from './containers/App';
 import 'babel-polyfill';
 
-import { open, close } from './actions/window';
+import { open } from './actions/window';
 
 import './assets/styles/style.less';
 import '../../node_modules/d3fc/dist/d3fc.min.css';
@@ -21,7 +21,6 @@ require('script!../../node_modules/BitFlux/dist/bitflux.js');
 
 fin.desktop.main(() => {
     fin.desktop.Window.getCurrent().contentWindow.addEventListener('beforeunload', () => {
-        fin.desktop.Window.getCurrent().contentWindow.opener.store.dispatch(close());
         unmountComponentAtNode(document.getElementById('app'));
     });
 
