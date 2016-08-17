@@ -33,9 +33,33 @@ export const restore = createActionCreator(() => ({
     type: ACTION_TYPES.RESTORE
 }));
 
-export const open = createActionCreator(() => ({
-    type: ACTION_TYPES.OPEN
+const openWindowRequest = createActionCreator((config) => ({
+    type: ACTION_TYPES.OPEN_WINDOW_RESQUEST,
+    config
 }));
+
+const openWindowSuccess = createActionCreator((config) => ({
+    type: ACTION_TYPES.OPEN_WINDOW_SUCCESS,
+    config
+}));
+
+const openWindowError = createActionCreator((error) => ({
+    type: ACTION_TYPES.OPEN_WINDOW_ERROR,
+    error
+}));
+
+export function openWindow(config) {
+    return dispatch => {
+        dispatch(openWindowRequest(config));
+
+        return new Promise((resolve, reject) => {
+            new fin.desktop.Window( // eslint-disable-line no-new
+                config,
+                () => resolve(dispatch(openWindowSuccess(config))),
+                () => reject(dispatch(openWindowError())));
+        });
+    };
+}
 
 export const resizeError = createActionCreator(() => ({
     type: ACTION_TYPES.RESIZE_ERROR
