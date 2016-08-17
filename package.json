@@ -90,6 +90,7 @@
     "redux": "^3.4.0",
     "redux-localstorage": "^0.4.1",
     "redux-logger": "^2.6.1",
+    "redux-promise-middleware": "^3.3.2",
     "redux-thunk": "^2.0.1",
     "reselect": "^2.5.3"
   },

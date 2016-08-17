@@ -38,26 +38,6 @@ export const open = createActionCreator(() => ({
     type: ACTION_TYPES.OPEN
 }));
 
-const resizeSuccess = createActionCreator(() => ({
-    type: ACTION_TYPES.RESIZE_SUCCESS
-}));
-
-const resizeError = createActionCreator(() => ({
-    type: ACTION_TYPES.RESIZE_ERROR
-}));
-
-const updatingOptions = createActionCreator(() => ({
-    type: ACTION_TYPES.UPDATING_OPTIONS
-}));
-
-const updatingOptionsSuccess = createActionCreator(() => ({
-    type: ACTION_TYPES.UPDATING_OPTIONS_SUCCESS
-}));
-
-const updatingOptionsError = createActionCreator(() => ({
-    type: ACTION_TYPES.UPDATING_OPTIONS_ERROR
-}));
-
 export const windowResized = createActionCreator((dimensions) => ({
     type: ACTION_TYPES.WINDOW_RESIZED,
     previousExpandedDimensions: dimensions
@@ -67,138 +47,71 @@ function getWindowStateForCurrentWindow(getState) {
     return getState().childWindows[currentWindowService.getCurrentWindowName()].windowState;
 }
 
-export function minimizeWindow() {
-    return dispatch => {
-        dispatch(resizing());
-        fin.desktop.Window.getCurrent().minimize(
-            () => dispatch(resizeSuccess()),
-            () => dispatch(resizeError())
-        );
-    };
-}
+export const minimizeWindow = createActionCreator(() => ({
+    type: ACTION_TYPES.RESIZING,
+    payload: new Promise((resolve, reject) => {
+        fin.desktop.Window.getCurrent().minimize(resolve, reject);
+    })
+}));
 
-export function maximizeWindow() {
-    return dispatch => {
-        dispatch(resizing());
-        fin.desktop.Window.getCurrent().maximize(
-            () => dispatch(resizeSuccess()),
-            () => dispatch(resizeError())
-        );
-    };
-}
+export const maximizeWindow = createActionCreator(() => ({
+    type: ACTION_TYPES.RESIZING,
+    payload: new Promise((resolve, reject) => {
+        fin.desktop.Window.getCurrent().maximize(resolve, reject);
+    })
+}));
 
-export function restoreWindow() {
-    return dispatch => {
-        dispatch(resizing());
-        fin.desktop.Window.getCurrent().restore(
-            () => dispatch(resizeSuccess()),
-            () => dispatch(resizeError())
-        );
-    };
-}
+export const restoreWindow = createActionCreator(() => ({
+    type: ACTION_TYPES.RESIZING,
+    payload: new Promise((resolve, reject) => {
+        fin.desktop.Window.getCurrent().restore(resolve, reject);
+    })
+}));
 
-function resizeCompactSuccess() {
-    return (dispatch, getState) => {
-        const { isMaximized } = getWindowStateForCurrentWindow(getState);
+const updateOptions = createActionCreator((options) => ({
+    type: ACTION_TYPES.UPDATING_OPTIONS,
+    payload: new Promise((resolve, reject) => {
+        currentWindowService.updateOptions(options, resolve, reject);
+    })
+}));
 
-        dispatch(resizeSuccess());
-        dispatch(compact(isMaximized));
-    };
-}
-
-function resizePreviousSuccess() {
-    return (dispatch, getState) => {
-        const { previousMaximizedState } = getWindowStateForCurrentWindow(getState);
-
-        if (previousMaximizedState) {
-            dispatch(maximizeWindow());
-        } else {
-            dispatch(resizeSuccess());
-        }
-        dispatch(expand());
-    };
-}
-
-function updateOptionsToCompact() {
-    return dispatch => {
-        dispatch(updatingOptions());
-        const [minWidth, minHeight] = configService.getCompactWindowDimensions();
-
-        return new Promise((resolve, reject) => {
-            currentWindowService.updateOptions({
-                resizable: false,
-                maximizable: false,
-                minWidth,
-                minHeight
-            },
-            () => resolve(dispatch(updatingOptionsSuccess())),
-            () => reject(dispatch(updatingOptionsError())));
-        });
-    };
-}
-
-function updateOptionsToDefault() {
-    return dispatch => {
-        dispatch(updatingOptions());
-        const [minWidth, minHeight] = configService.getDefaultWindowMinDimensions();
-
-        return new Promise((resolve, reject) => {
-            currentWindowService.updateOptions({
-                resizable: true,
-                maximizable: true,
-                minWidth,
-                minHeight
-            },
-            () => resolve(dispatch(updatingOptionsSuccess())),
-            () => reject(dispatch(updatingOptionsError())));
-        });
-    };
-}
-
-function resizeCompact() {
-    return dispatch => {
-        dispatch(resizing());
-        const [compactWindowWidth, compactWindowHeight] = configService.getCompactWindowDimensions();
-
-        return new Promise((resolve, reject) => {
-            currentWindowService.resizeTo(
-                compactWindowWidth,
-                compactWindowHeight,
-                'top-right',
-                () => resolve(dispatch(resizeCompactSuccess())),
-                () => reject(dispatch(resizeError()))
-            );
-        });
-    };
-}
-
-function resizePrevious() {
-    return (dispatch, getState) => {
-        dispatch(resizing());
-        const [previousWindowWidth, previousWindowHeight] = getWindowStateForCurrentWindow(getState).previousExpandedDimensions;
-
-        return new Promise((resolve, reject) => {
-            currentWindowService.resizeTo(
-                previousWindowWidth,
-                previousWindowHeight,
-                'top-right',
-                () => resolve(dispatch(resizePreviousSuccess())),
-                () => reject(dispatch(resizeError()))
-            );
-        });
-    };
-}
+const resize = createActionCreator((width, height, anchor) => ({
+    type: ACTION_TYPES.RESIZING,
+    payload: new Promise((resolve, reject) => {
+        currentWindowService.resizeTo(width, height, anchor, resolve, reject);
+    })
+}));
 
 export function resizeToCompact() {
-    return dispatch => Promise.all([
-        dispatch(updateOptionsToCompact()),
-        dispatch(resizeCompact())
-    ]);
+    return dispatch => {
+        const [minWidth, minHeight] = configService.getCompactWindowDimensions();
+        const options = {
+            resizable: false,
+            maximizable: false,
+            minWidth,
+            minHeight
+        };
+        const [compactWindowWidth, compactWindowHeight] = configService.getCompactWindowDimensions();
+        return Promise.all([
+            dispatch(updateOptions(options)),
+            dispatch(resize(compactWindowWidth, compactWindowHeight, 'top-right'))
+        ]);
+    };
 }
 
 export function resizeToPrevious() {
-    return dispatch => Promise.all([
-        dispatch(updateOptionsToDefault()),
-        dispatch(resizePrevious())
-    ]);
+    return (dispatch, getState) => {
+        const [minWidth, minHeight] = configService.getDefaultWindowMinDimensions();
+        const options = {
+            resizable: true,
+            maximizable: true,
+            minWidth,
+            minHeight
+        };
+        const [previousWindowWidth, previousWindowHeight] = getWindowStateForCurrentWindow(getState).previousExpandedDimensions;
+        return Promise.all([
+            dispatch(updateOptions(options)),
+            dispatch(resize(previousWindowWidth, previousWindowHeight, 'top-right'))
+        ]);
+    };
 }
