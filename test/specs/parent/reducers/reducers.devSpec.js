@@ -1,5 +1,3 @@
-import { expect } from 'chai';
-import sinon from 'sinon';
 import reducers from '../../../../src/parent/reducers/reducers.dev.js';
 
 describe('parent/reducers/reducers.dev', () => {

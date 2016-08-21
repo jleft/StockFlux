@@ -1,19 +1,8 @@
-import { expect } from 'chai';
-import currentWindowServiceStub from '../../../helper/currentWindowServiceStub';
 import { selectStock,
-         unselectStock,
-         __RewireAPI__ as rewiredActions } from '../../../../src/child/actions/selection';
+         unselectStock } from '../../../../src/child/actions/selection';
 import { SELECTION as ACTION_TYPES } from '../../../../src/shared/constants/actionTypes';
 
 describe('child/actions/selection', () => {
-    before(() => {
-        rewiredActions.__Rewire__('currentWindowService', currentWindowServiceStub);
-    });
-
-    after(() => {
-        rewiredActions.__ResetDependency__('currentWindowService');
-    });
-
     it('should create an action to select a stock', () => {
         const code = 'GOOG';
         const name = 'Alphabet Inc (GOOG) Prices, Dividends, Splits and Trading Volume';

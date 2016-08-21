@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { truncate } from '../../../../src/child/services/formatters';
 
 describe('child/services/formatters', () => {

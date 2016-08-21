@@ -1,7 +1,7 @@
 import { WINDOW as ACTION_TYPES } from '../../shared/constants/actionTypes';
 import configService from '../../shared/ConfigService';
 import createActionCreator from '../utils/createActionCreator';
-import currentWindowService from '../services/currentWindowService';
+import { getCurrentWindowName, updateOptions, resizeTo } from '../services/currentWindowService';
 
 export const minimize = createActionCreator(() => ({
     type: ACTION_TYPES.MINIMIZE
@@ -64,7 +64,7 @@ export const windowResized = createActionCreator((dimensions) => ({
 }));
 
 function getWindowStateForCurrentWindow(getState) {
-    return getState().childWindows[currentWindowService.getCurrentWindowName()].windowState;
+    return getState().childWindows[getCurrentWindowName()].windowState;
 }
 
 export function minimizeWindow() {
@@ -125,7 +125,7 @@ function updateOptionsToCompact() {
         const [minWidth, minHeight] = configService.getCompactWindowDimensions();
 
         return new Promise((resolve, reject) => {
-            currentWindowService.updateOptions({
+            updateOptions({
                 resizable: false,
                 maximizable: false,
                 minWidth,
@@ -143,7 +143,7 @@ function updateOptionsToDefault() {
         const [minWidth, minHeight] = configService.getDefaultWindowMinDimensions();
 
         return new Promise((resolve, reject) => {
-            currentWindowService.updateOptions({
+            updateOptions({
                 resizable: true,
                 maximizable: true,
                 minWidth,
@@ -161,7 +161,7 @@ function resizeCompact() {
         const [compactWindowWidth, compactWindowHeight] = configService.getCompactWindowDimensions();
 
         return new Promise((resolve, reject) => {
-            currentWindowService.resizeTo(
+            resizeTo(
                 compactWindowWidth,
                 compactWindowHeight,
                 'top-right',
@@ -178,7 +178,7 @@ function resizePrevious() {
         const [previousWindowWidth, previousWindowHeight] = getWindowStateForCurrentWindow(getState).previousExpandedDimensions;
 
         return new Promise((resolve, reject) => {
-            currentWindowService.resizeTo(
+            resizeTo(
                 previousWindowWidth,
                 previousWindowHeight,
                 'top-right',

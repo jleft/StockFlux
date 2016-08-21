@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import reducers from '../../../../src/parent/reducers/reducers';
 
 describe('parent/reducers/reducers', () => {

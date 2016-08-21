@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import selection from '../../../../src/child/reducers/selection';
 import { SELECTION as ACTION_TYPES } from '../../../../src/shared/constants/actionTypes';
 

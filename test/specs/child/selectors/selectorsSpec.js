@@ -1,5 +1,3 @@
-import { expect } from 'chai';
-import currentWindowServiceStub from '../../../helper/currentWindowServiceStub';
 import {
     appSelector,
     favouritesSelector,
@@ -48,11 +46,11 @@ describe('child/selectors/selectors', () => {
     };
 
     before(() => {
-        rewiredSelectors.__Rewire__('currentWindowService', currentWindowServiceStub);
+        rewiredSelectors.__Rewire__('getCurrentWindowName', () => 'window0002');
     });
 
     after(() => {
-        rewiredSelectors.__ResetDependency__('currentWindowService');
+        rewiredSelectors.__ResetDependency__('getCurrentWindowName');
     });
 
     describe('appSelector', () => {

@@ -1,0 +1,4 @@
+--webpack-config webpack/webpack.config.js
+--recursive
+--colors
+test/**/*Spec.js

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import favourites from '../../../../src/child/reducers/favourites';
 import { FAVOURITES as ACTION_TYPES } from '../../../../src/shared/constants/actionTypes';
 

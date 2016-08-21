@@ -1,16 +1,12 @@
 const webpack = require('webpack');
+const WebpackConfig = require('webpack-config').Config;
 
-module.exports = {
-    entry: {
-        child: ['./src/child/index.js'],
-        parent: ['./src/parent/parent.js']
-    },
+const config = new WebpackConfig().merge({
     output: {
         filename: './[name]_bundle.js'
     },
     module: {
         loaders: [
-            { test: /\.js$/, exclude: /node_modules/, loader: 'react-hot!babel' },
             { test: /\.less$/, loader: 'style-loader!css-loader!less-loader' },
             { test: /\.css$/, loader: 'style-loader!css-loader' },
             { test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192' },
@@ -25,6 +21,11 @@ module.exports = {
         extensions: ['', '.js']
     },
     plugins: [
-        new webpack.optimize.OccurenceOrderPlugin()
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        })
     ]
-};
+});
+
+module.exports = config;

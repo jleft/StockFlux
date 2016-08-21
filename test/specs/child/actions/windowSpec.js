@@ -1,7 +1,5 @@
-import { expect } from 'chai';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import currentWindowServiceStub from '../../../helper/currentWindowServiceStub';
 import { minimize,
          compact,
          expand,
@@ -16,14 +14,6 @@ import { minimize,
 import { WINDOW as ACTION_TYPES } from '../../../../src/shared/constants/actionTypes';
 
 describe('child/actions/window', () => {
-    beforeEach(() => {
-        rewiredActions.__Rewire__('currentWindowService', currentWindowServiceStub);
-    });
-
-    afterEach(() => {
-        rewiredActions.__ResetDependency__('currentWindowService');
-    });
-
     it('should create an action for minimize', () => {
         const expectedAction = { windowName: 'window0002', type: ACTION_TYPES.MINIMIZE };
         const actualAction = minimize();
@@ -92,6 +82,8 @@ describe('child/actions/window', () => {
 
     describe('resizeTo', () => {
         let store;
+        let updateOptionsStub;
+        let resizeToStub;
 
         beforeEach(() => {
             const mockStore = configureMockStore([thunk]);
@@ -105,10 +97,18 @@ describe('child/actions/window', () => {
                     }
                 }
             });
+
+            updateOptionsStub = sinon.stub();
+            rewiredActions.__Rewire__('updateOptions', updateOptionsStub);
+
+            resizeToStub = sinon.stub();
+            rewiredActions.__Rewire__('resizeTo', resizeToStub);
         });
 
         afterEach(() => {
             store = null;
+            rewiredActions.__ResetDependency__('updateOptions');
+            rewiredActions.__ResetDependency__('resizeTo');
         });
 
         describe('compact', () => {
@@ -126,8 +126,8 @@ describe('child/actions/window', () => {
                     { windowName: 'window0002', type: ACTION_TYPES.TOGGLE_COMPACT, isCompact: true, previousMaximizedState: false }
                 ];
 
-                currentWindowServiceStub.updateOptions.callsArg(1); // call success callback
-                currentWindowServiceStub.resizeTo.callsArg(3);      // call success callback
+                updateOptionsStub.callsArg(1); // call success callback
+                resizeToStub.callsArg(3);      // call success callback
 
                 return store.dispatch(resizeToCompact())
                     .then(() => {
@@ -149,8 +149,8 @@ describe('child/actions/window', () => {
                     { windowName: 'window0002', type: ACTION_TYPES.TOGGLE_COMPACT, isCompact: true, previousMaximizedState: false }
                 ];
 
-                currentWindowServiceStub.updateOptions.callsArg(2); // call error callback
-                currentWindowServiceStub.resizeTo.callsArg(3);      // call success callback
+                updateOptionsStub.callsArg(2); // call error callback
+                resizeToStub.callsArg(3);      // call success callback
 
                 return store.dispatch(resizeToCompact())
                     .catch(() => {
@@ -171,8 +171,8 @@ describe('child/actions/window', () => {
                     { windowName: 'window0002', type: ACTION_TYPES.RESIZE_ERROR }
                 ];
 
-                currentWindowServiceStub.updateOptions.callsArg(1); // call success callback
-                currentWindowServiceStub.resizeTo.callsArg(4);      // call error callback
+                updateOptionsStub.callsArg(1); // call success callback
+                resizeToStub.callsArg(4);      // call error callback
 
                 return store.dispatch(resizeToCompact())
                     .catch(() => {
@@ -192,8 +192,8 @@ describe('child/actions/window', () => {
                     { windowName: 'window0002', type: ACTION_TYPES.RESIZE_ERROR }
                 ];
 
-                currentWindowServiceStub.updateOptions.callsArg(2); // call error callback
-                currentWindowServiceStub.resizeTo.callsArg(4);      // call error callback
+                updateOptionsStub.callsArg(2); // call error callback
+                resizeToStub.callsArg(4);      // call error callback
 
                 return store.dispatch(resizeToCompact())
                     .catch(() => {
@@ -220,8 +220,8 @@ describe('child/actions/window', () => {
                     { windowName: 'window0002', type: ACTION_TYPES.TOGGLE_COMPACT, isCompact: false }
                 ];
 
-                currentWindowServiceStub.updateOptions.callsArg(1); // call success callback
-                currentWindowServiceStub.resizeTo.callsArg(3);      // call success callback
+                updateOptionsStub.callsArg(1); // call success callback
+                resizeToStub.callsArg(3);      // call success callback
 
                 return store.dispatch(resizeToPrevious())
                     .then(() => {
@@ -243,8 +243,8 @@ describe('child/actions/window', () => {
                     { windowName: 'window0002', type: ACTION_TYPES.TOGGLE_COMPACT, isCompact: false }
                 ];
 
-                currentWindowServiceStub.updateOptions.callsArg(2); // call error callback
-                currentWindowServiceStub.resizeTo.callsArg(3);      // call success callback
+                updateOptionsStub.callsArg(2); // call error callback
+                resizeToStub.callsArg(3);      // call success callback
 
                 return store.dispatch(resizeToPrevious())
                     .catch(() => {
@@ -264,8 +264,8 @@ describe('child/actions/window', () => {
                     { windowName: 'window0002', type: ACTION_TYPES.RESIZE_ERROR }
                 ];
 
-                currentWindowServiceStub.updateOptions.callsArg(1); // call success callback
-                currentWindowServiceStub.resizeTo.callsArg(4);      // call error callback
+                updateOptionsStub.callsArg(1); // call success callback
+                resizeToStub.callsArg(4);      // call error callback
 
                 return store.dispatch(resizeToPrevious())
                     .catch(() => {
@@ -285,8 +285,8 @@ describe('child/actions/window', () => {
                     { windowName: 'window0002', type: ACTION_TYPES.RESIZE_ERROR }
                 ];
 
-                currentWindowServiceStub.updateOptions.callsArg(2); // call error callback
-                currentWindowServiceStub.resizeTo.callsArg(4);      // call error callback
+                updateOptionsStub.callsArg(2); // call error callback
+                resizeToStub.callsArg(4);      // call error callback
 
                 return store.dispatch(resizeToPrevious())
                     .catch(() => {

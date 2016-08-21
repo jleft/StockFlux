@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import reducers from '../../../../src/child/reducers/reducers';
 import configService from '../../../../src/shared/ConfigService';
 

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import sidebar from '../../../../src/child/reducers/sidebar.js';
 import { SIDEBAR as ACTION_TYPES } from '../../../../src/shared/constants/actionTypes';
 

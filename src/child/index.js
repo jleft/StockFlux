@@ -4,8 +4,7 @@ import { Provider } from 'react-redux';
 import { render } from 'react-dom';
 import App from './containers/App';
 import WindowStateService from './services/WindowStateService';
-import currentWindowService from './services/currentWindowService';
-import 'babel-polyfill';
+import { ready, getCurrentWindow } from './services/currentWindowService';
 
 import { open } from './actions/window';
 import { toggleFavourite } from './actions/favourites';
@@ -25,8 +24,8 @@ require('script!../../node_modules/d3fc/dist/d3fc.bundle.min.js');
 require('script!../../node_modules/BitFlux/dist/bitflux.js');
 /* eslint-enable import/no-unresolved */
 
-currentWindowService.ready(() => {
-    const currentWindow = currentWindowService.getCurrentWindow();
+ready(() => {
+    const currentWindow = getCurrentWindow();
     const store = currentWindow.contentWindow.opener.store;
     const rootElement = document.getElementById('app');
 

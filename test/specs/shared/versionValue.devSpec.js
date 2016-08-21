@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import versionValue from '../../../src/shared/versionValue.dev';
 
 describe('shared/versionValue.dev', () => {

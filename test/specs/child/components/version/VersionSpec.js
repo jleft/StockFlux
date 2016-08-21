@@ -1,5 +1,3 @@
-import { expect } from 'chai';
-import sinon from 'sinon';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 import Version from '../../../../../src/child/components/version/Version.js';
@@ -10,7 +8,7 @@ describe('child/components/version/Version', () => {
 
     before(() => {
         Version.__Rewire__('version', '1.2.3');
-        Version.__Rewire__('currentWindowService', { openUrlWithBrowser: clickSpy });
+        Version.__Rewire__('openUrlWithBrowser', clickSpy);
 
         const renderer = TestUtils.createRenderer();
         renderer.render(<Version />);
@@ -19,7 +17,7 @@ describe('child/components/version/Version', () => {
 
     after(() => {
         Version.__ResetDependency__('version');
-        Version.__ResetDependency__('currentWindowService');
+        Version.__ResetDependency__('openUrlWithBrowser');
     });
 
     it('should render correctly', () => {

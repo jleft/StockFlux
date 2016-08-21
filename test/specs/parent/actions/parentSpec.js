@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { close } from '../../../../src/parent/actions/parent';
 import { PARENT as ACTION_TYPES } from '../../../../src/shared/constants/actionTypes';
 

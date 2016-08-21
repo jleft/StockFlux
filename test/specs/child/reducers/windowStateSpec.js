@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import windowState from '../../../../src/child/reducers/windowState.js';
 import { WINDOW as ACTION_TYPES } from '../../../../src/shared/constants/actionTypes';
 import configService from '../../../../src/shared/ConfigService';

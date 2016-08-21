@@ -1,4 +1,4 @@
-import fetch from 'isomorphic-fetch';
+import 'isomorphic-fetch';
 import moment from 'moment';
 // Be very careful changing the line below. It is replaced with a string.replace in the grunt build
 // to swap out the API key for release.

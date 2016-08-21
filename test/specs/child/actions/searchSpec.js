@@ -1,25 +1,12 @@
-import { expect } from 'chai';
-import sinon from 'sinon';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import nock from 'nock';
-import currentWindowServiceStub from '../../../helper/currentWindowServiceStub';
 import { searchInput,
-         search,
-         __RewireAPI__ as rewiredActions } from '../../../../src/child/actions/search';
+         search } from '../../../../src/child/actions/search';
 import { SEARCH as ACTION_TYPES } from '../../../../src/shared/constants/actionTypes';
 import { apiKey } from '../../../../src/child/services/QuandlService';
 import createFakeQuandlServer from '../../../helper/fakeQuandlServer';
 
 describe('child/actions/search', () => {
-    before(() => {
-        rewiredActions.__Rewire__('currentWindowService', currentWindowServiceStub);
-    });
-
-    after(() => {
-        rewiredActions.__ResetDependency__('currentWindowService');
-    });
-
     it('should create an action to input a stock to search for', () => {
         const term = 'GOOG';
         const expectedAction = {
@@ -35,14 +22,15 @@ describe('child/actions/search', () => {
     describe('search', () => {
         let mockStore;
         let clock;
-        before(() => {
+        let server;
+        beforeEach(() => {
             mockStore = configureMockStore([thunk]);
-            createFakeQuandlServer(apiKey());
+            server = createFakeQuandlServer(apiKey());
             clock = sinon.useFakeTimers(new Date(2016, 5, 1).getTime());
         });
 
-        after(() => {
-            nock.cleanAll();
+        afterEach(() => {
+            server.restore();
             clock.restore();
         });
 

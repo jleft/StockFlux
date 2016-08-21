@@ -1,22 +1,11 @@
-import { expect } from 'chai';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import currentWindowServiceStub from '../../../helper/currentWindowServiceStub';
 import { insertFavouriteAt,
          toggleFavourite,
-         quandlResponse,
-         __RewireAPI__ as rewiredActions } from '../../../../src/child/actions/favourites';
+         quandlResponse } from '../../../../src/child/actions/favourites';
 import { FAVOURITES as FAVOURITES_ACTION_TYPES, SELECTION as SELECTION_ACTION_TYPES } from '../../../../src/shared/constants/actionTypes';
 
 describe('child/actions/favourites', () => {
-    before(() => {
-        rewiredActions.__Rewire__('currentWindowService', currentWindowServiceStub);
-    });
-
-    after(() => {
-        rewiredActions.__ResetDependency__('currentWindowService');
-    });
-
     it('should create an action to insert a favourite at a given index', () => {
         const index = 1;
         const code = 'GOOG';

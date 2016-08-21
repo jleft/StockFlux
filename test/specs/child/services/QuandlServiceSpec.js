@@ -1,18 +1,16 @@
-import { expect } from 'chai';
-import sinon from 'sinon';
-import nock from 'nock';
 import { search, getStockMetadata, getStockData, apiKey } from '../../../../src/child/services/QuandlService';
 import createFakeQuandlServer from '../../../helper/fakeQuandlServer';
 
 describe('child/services/QuandlService', () => {
     let clock;
-    before(() => {
-        createFakeQuandlServer(apiKey());
+    let server;
+    beforeEach(() => {
+        server = createFakeQuandlServer(apiKey());
         clock = sinon.useFakeTimers(new Date(2016, 5, 1).getTime());
     });
 
-    after(() => {
-        nock.cleanAll();
+    afterEach(() => {
+        server.restore();
         clock.restore();
     });
 

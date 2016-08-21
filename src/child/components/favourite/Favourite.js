@@ -4,7 +4,7 @@ import { truncate } from '../../services/formatters';
 import Minichart from '../minichart/Minichart.js';
 import Confirmation from './UnfavouriteConfirmation.js';
 import { getStockData as quandlServiceGetStockData } from '../../services/QuandlService.js';
-import currentWindowService from '../../services/currentWindowService';
+import { getCurrentWindowName } from '../../services/currentWindowService';
 
 import arrowUp from '../../assets/png/arrow_up.png';
 import arrowDown from '../../assets/png/arrow_down.png';
@@ -77,7 +77,7 @@ class Favourite extends Component {
         return e => {
             // TODO: fade out window if it's last stock
             const codeData = { code: stockCode };
-            const windowData = { window: currentWindowService.getCurrentWindowName() };
+            const windowData = { window: getCurrentWindowName() };
             const { clientX } = e;
             const { offsetY } = e.nativeEvent;
 

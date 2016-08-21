@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import semver from 'semver';
 import versionValue from '../../../src/shared/versionValue.prod';
 

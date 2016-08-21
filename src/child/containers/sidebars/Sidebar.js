@@ -4,7 +4,7 @@ import Favourites from './favourites/Favourites.js';
 import Search from './search/Search.js';
 import { sidebarSelector as mapStateToProps } from '../../selectors/selectors';
 import classNames from 'classnames';
-import currentWindowService from '../../services/currentWindowService';
+import { getCurrentWindowName } from '../../services/currentWindowService';
 
 import { selectFavourites, selectSearch } from '../../actions/sidebar';
 import { selectStock } from '../../actions/selection';
@@ -34,7 +34,7 @@ class Sidebar extends Component {
     onDragEnter(e) {
         const dragStartWindow = this.getWindowFromDT(e.dataTransfer.types);
 
-        if (dragStartWindow !== currentWindowService.getCurrentWindowName()) {
+        if (dragStartWindow !== getCurrentWindowName()) {
             this.addActive();
         }
     }

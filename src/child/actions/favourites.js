@@ -1,7 +1,7 @@
 import { FAVOURITES as ACTION_TYPES } from '../../shared/constants/actionTypes';
 import { selectStock, unselectStock } from './selection';
 import createActionCreator from '../utils/createActionCreator';
-import currentWindowService from '../services/currentWindowService';
+import { getCurrentWindowName } from '../services/currentWindowService';
 
 export const insertFavouriteAt = createActionCreator((index, code) => ({
     type: ACTION_TYPES.INSERT_FAVOURITE_AT,
@@ -23,7 +23,7 @@ function toggleFavouriteInWindow(code, windowName) {
     };
 }
 
-export function toggleFavourite(code, windowName = currentWindowService.getCurrentWindowName()) {
+export function toggleFavourite(code, windowName = getCurrentWindowName()) {
     return (dispatch, getState) => {
         const { favourites, selection } = getState().childWindows[windowName];
 
