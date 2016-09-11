@@ -1,5 +1,6 @@
 import configService from '../../shared/ConfigService';
 import { close } from '../actions/parent';
+import { toggleFavouriteInWindow } from '../../child/actions/favourites';
 
 class ParentService {
 
@@ -10,7 +11,7 @@ class ParentService {
         fin.desktop.InterApplicationBus.subscribe(
             fin.desktop.Application.getCurrent().uuid,
             'createChildWindow',
-            position => this.createChildWindow(null, position)
+            position => this.createChildWindow({ position })
         );
     }
 
@@ -27,16 +28,21 @@ class ParentService {
         }
     }
 
-    createChildWindowSuccess(childWindow, position) {
+    createChildWindowSuccess(childWindow, position, firstWindow) {
         if (position) {
             childWindow.setBounds(position[0], position[1]);
         }
-
+        if (firstWindow) {
+            const defaultStocks = ['AAPL', 'MSFT', 'TITN', 'TSLA'];
+            defaultStocks.forEach((code) => {
+                this.store.dispatch(toggleFavouriteInWindow(code, childWindow.name));
+            });
+        }
         childWindow.show();
         childWindow.addEventListener('closed', this.onChildClosed);
     }
 
-    createChildWindow(windowName, position) {
+    createChildWindow({ windowName, position, firstWindow }) {
         let windowConfig;
         if (windowName) {
             const { windowState } = this.store.getState().childWindows[windowName];
@@ -53,7 +59,7 @@ class ParentService {
 
         const childWindow = new fin.desktop.Window(
             windowConfig,
-            () => this.createChildWindowSuccess(childWindow, position)
+            () => this.createChildWindowSuccess(childWindow, position, firstWindow)
         );
     }
 
@@ -61,11 +67,11 @@ class ParentService {
         fin.desktop.Window.getCurrent().contentWindow.store = this.store;
 
         if (this.getChildWindowCount() === 0) {
-            this.createChildWindow();
+            this.createChildWindow({ firstWindow: true });
         } else {
             Object.keys(this.store.getState().childWindows).forEach((windowName) => {
                 const newWindowName = windowName === 'undefined' ? null : windowName;
-                this.createChildWindow(newWindowName);
+                this.createChildWindow({ windowName: newWindowName });
             });
         }
     }
