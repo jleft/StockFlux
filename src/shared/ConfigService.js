@@ -1,3 +1,5 @@
+import shortid from 'shortid';
+
 const BITFLUX_STOCK_AMOUNT = 1200;
 const BITFLUX_INITIAL_PROPORTION = 16 * 7 / BITFLUX_STOCK_AMOUNT; // ~4 months
 const CLOSED_SIDEBAR_WIDTH = 50;
@@ -18,7 +20,8 @@ const allowContextMenu = process.env.NODE_ENV !== 'production';
  */
 class ConfigService {
     createName() {
-        return `window${Math.floor(Math.random() * 1000) + Math.ceil(Math.random() * 999)}`;
+        const id = shortid.generate();
+        return `window${id}`;
     }
 
     getConfig(name, overrides) {
